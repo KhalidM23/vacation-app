@@ -24,3 +24,10 @@ class Itinerary(db.Model):
     cost_of_activity = db.Column(db.Float)
     vacation_id = db.Column(db.Integer)
 
+class Users(db.Model):
+    __tablename__ = "usernames"
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(100))
+    password = db.Column(db.String(100))
+
+
