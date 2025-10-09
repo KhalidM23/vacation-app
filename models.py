@@ -15,9 +15,6 @@ class Vacation(db.Model):
     total_cost = db.Column(db.Float)
     tips = db.Column(db.Text)
     user_id = db.Column(db.Integer)
-    # Your job: Define the columns here
-    # Use: db.Column() with types like db.Integer, db.String(), db.Text, db.Date
-    # Example: id = db.Column(db.Integer, primary_key=True)
 
 class Itinerary(db.Model):
     __tablename__ = "itineraries"
@@ -26,6 +23,15 @@ class Itinerary(db.Model):
     date_of_activity = db.Column(db.Date)
     cost_of_activity = db.Column(db.Float)
     vacation_id = db.Column(db.Integer)
+
+
+class Bookmarks(db.Model):
+    __tablename__ = "bookmarks"
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer)
+    vacation_id = db.Column(db.Integer)
+
+
 
 class Users(UserMixin,db.Model):
     __tablename__ = "usernames"

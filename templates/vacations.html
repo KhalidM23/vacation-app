@@ -14,11 +14,16 @@
                     <p1>From {{ vacation.start_date }} to {{ vacation.end_date }}</p1>
                     <p1>{{ vacation.total_cost }}$ is the cost.</p1>
                     <p1> {{ vacation.tips }} </p1>
+                    <form action="{{ url_for('add_itinerary', vacation_id=vacation.id) }}" method='post'>
+                        <button type="submit" class="btn">Edit</button>
+                    </form>
                 </div>
-
-
             {% endfor %}
             {% endif %}
+
+            <form action="/delete_all" method="get">
+                <button type="submit">Delete All Vacations</button>
+            </form>
             <nav>
                 <a href= "/">Home</a>
                 <a href="/create_vacation">Create New Vacation</a>

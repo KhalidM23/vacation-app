@@ -22,12 +22,14 @@ with app.app_context():
 def home():
     return render_template('home.html')
 
+
+
+
+
+
 @app.route('/vacations')
 def vacations():
     vacations = Vacation.query.all()
-    print(f"Number of vacations: {len(vacations)}")  # Debug line
-    for v in vacations:
-        print(f"Destination: {v.destination}")  # Debug line
     return render_template('vacations.html',vacations=vacations)
 
 @app.route('/create_vacation', methods=['POST','GET'])
@@ -44,17 +46,67 @@ def create_vacation():
 
         cost = request.form.get('total_cost')
         tips = request.form.get('tips')
-        user = 1
+
         new_vacay = Vacation(destination = dest,start_date = st_date, end_date = end_date,
                              total_cost = cost, tips = tips)
         db.session.add(new_vacay)
         db.session.commit()
-        print("Vacation saved successfully!")
-        print(f"Total vacations in DB: {Vacation.query.count()}")
+
         return redirect(url_for('vacations'))
     return render_template('create_vacation.html')
-    
 
+@app.route('/add_itinerary/<int:vacation_id>', methods=['POST'])
+def add_itinerary(vacation_id):
+    vacation =  Vacation.query.get(vacation_id)
+    return render_template('edit_vacation.html ', vacation=vacation)
+
+
+@app.route('/edit_vacation/<int:vacation_id>', methods=['GET',"POST"])
+def edit_vacation(vacation_id):
+    editted_vacation = Vacation.query.get(vacation_id)
+    print(editted_vacation.destination)
+    if(request.method == 'POST'):
+        editted_vacation.destination = request.form.get('destination')
+
+        start_date_str = request.form.get('start_date')
+        editted_vacation.start_date = datetime.strptime(start_date_str, '%Y-%m-%d').date()
+
+
+        end_date_str = request.form.get('end_date')
+        editted_end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+
+
+        editted_vacation.cost = request.form.get('total_cost')
+        editted_vacation.tips = request.form.get('tips')
+ 
+        db.session.commit()
+        return render_template('home.html', vacation=editted_vacation)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+'''
+@app.route('/delete_all')
+def delete_vacations():
+    db.session.query(Vacation).delete()
+    db.session.commit()
+    return redirect(url_for('vacation'))
+'''
 
 
 
