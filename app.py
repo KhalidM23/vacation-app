@@ -2,14 +2,21 @@
 from multiprocessing import synchronize
 from xmlrpc.client import _datetime
 from flask import Flask, render_template, request, redirect, url_for
-from models import Itinerary, db, Vacation
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from models import Itinerary, db, Vacation, User
 from datetime import datetime
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vacations.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['SECRET_KEY'] = 'secretkey'
 
 db.init_app(app)
+
+
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
 
 with app.app_context():
     db.create_all()
@@ -127,15 +134,6 @@ def delete_itinerary(itinerary_id):
     return redirect(url_for('view_vacation', vacation_id = vacation_id))
 
 
-
-
-
-
-
-
-
-
-
     
 '''
 @app.route('/delete_all')
@@ -152,7 +150,50 @@ def delete_vacations():
 #                                                                       LOGIN INFORMATION
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
+@app.route('/login', methods=['POST','GET'])
+def login():
+    if(request.method == 'POST'):
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        existing_user = User.query.filter_by(username=username).first()
+        if(existing_user and existing_user.check_password(password)):
+            login_user(existing_user)
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('login'))
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return render_template('login.html')
+
+
+
+
+@app.route('/signup', methods=['GET','POST'])
+def signup():
+    if(request.method == 'POST'):
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        existing_user = User.query.filter_by(username=username).first()
+        if(existing_user):
+            return redirect(url_for('signup'))
+
+        new_user = User(username=username)
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+        
+        return redirect(url_for('login'))
+    return render_template('signup.html')
 
 
 if __name__ == '__main__':
