@@ -20,12 +20,13 @@
     <form action="{{url_for('view_vacation', vacation_id = vacation.id)}} ">
         <button type="submit" class=" btn btn-primary">View</button>
     </form>
+    <form action="{{url_for('delete_vacation',vacation_id=vacation.id)}}" method="post" class="d-flex">
+        <button  type ="submit" class="btn btn-primary ms-auto">Delete</button>
+    </form>
 </div>
 {% endfor %}
 {% endif %}
 
-<form action="/delete_all" method="get">
-    <button type="submit">Delete All Vacations</button>
-</form>
+
 
 {% endblock %}

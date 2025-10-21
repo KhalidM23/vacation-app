@@ -33,17 +33,3 @@ class Bookmarks(db.Model):
 
 
 
-class Users(UserMixin,db.Model):
-    __tablename__ = "usernames"
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(100),unique = True, nullable = False)
-    password = db.Column(db.String(255), nullable = False)
-
-    # makes a password hash in order to not store text password
-    def set_password(self,password):
-        self.password_hash = generate_password_hash(password)
-    # checks the password given with the stored password
-    def check_password(self,password):
-        return check_password_hash(self.password_hash,password)
-
-

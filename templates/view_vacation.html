@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+{%block title%}View Vacations{%endblock%}
+{%block content%}
+
+<h1>Vacation</h1>
+<div class="border border-2">
+    <h2>{{ vacation.destination }}</h2>
+    <p>From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
+    <p>{{ vacation.total_cost }}$ is the cost.</p>
+    <p> {{ vacation.tips }} </p>
+</div>
+
+<h2>Itineraries</h2>
+<div class="border border-2">
+    {% if itineraries %}
+    {% for itin in itineraries %}
+    <h2>{{ itin.activity }}</h2>
+    <p>From {{ itin.date_of_activity }}</p>
+    <p>{{itin.cost_of_activity }}$ is the cost.</p>
+    <form action="{{url_for('delete_itinerary', itinerary_id = itin.id)}}" method="post">
+        <button class="btn btn-danger">Delete</button>
+    </form>
+    {% endfor %}
+    {% endif %}
+</div>
+<div>
+    <a class="btn btn-primary" href="{{ url_for('reroute_add_itinerary', vacation_id=vacation.id) }}" method="GET">Add Itinerary</a>
+</div>
+
+
+{%endblock%}

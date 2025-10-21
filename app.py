@@ -1,17 +1,12 @@
 
+from multiprocessing import synchronize
 from xmlrpc.client import _datetime
 from flask import Flask, render_template, request, redirect, url_for
 from models import Itinerary, db, Vacation
-from flask_login import LoginManager, UserMixin, login_user, logout_user, \
-                        login_required, current_user
 from datetime import datetime
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'change-me'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///vacations.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
 
 
 db.init_app(app)
@@ -71,10 +66,10 @@ def edit_vacation(vacation_id):
 
 
         end_date_str = request.form.get('end_date')
-        editted_end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        editted_vacation.end_date = datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        
 
-
-        editted_vacation.cost = request.form.get('total_cost')
+        editted_vacation.total_cost = request.form.get('total_cost')
         editted_vacation.tips = request.form.get('tips')
  
         db.session.commit()
@@ -84,7 +79,19 @@ def edit_vacation(vacation_id):
 
 @app.route('/view_vacation/<int:vacation_id>', methods= ['GET'])
 def view_vacation(vacation_id):
-    return render_template('view_vacation.html', vacation_id = vacation_id)
+    vacation = Vacation.query.get(vacation_id)
+    itineraries = Itinerary.query.filter_by(vacation_id=vacation_id).all()
+    return render_template('view_vacation.html', vacation = vacation, itineraries = itineraries)
+
+
+@app.route('/delete_vacation/<int:vacation_id>', methods=['POST'])
+def delete_vacation(vacation_id):
+    vacation = Vacation.query.get(vacation_id)
+    db.session.query(Itinerary).filter_by(vacation_id=vacation_id).delete(synchronize_session = False)
+    db.session.delete(vacation)
+    db.session.commit()
+    return redirect(url_for('vacations'))
+
 
 
 #                                                                                           ITINERARY INFORMATION
@@ -94,7 +101,7 @@ def reroute_add_itinerary(vacation_id):
     print("rerouted!!!!")
     return render_template('add_itinerary.html', vacation_id = vacation_id)
 
-@app.route('/add_itineraryX/<int:vacation_id>', methods=['POST'])
+@app.route('/add_itinerary_submit/<int:vacation_id>', methods=['POST'])
 def add_itinerary(vacation_id):
     if(request.method == 'POST'):
         new_activity = request.form.get('activity')
@@ -108,9 +115,16 @@ def add_itinerary(vacation_id):
         print("Itinerary added!")
         db.session.add(new_itinerary)
         db.session.commit()
-        return redirect(url_for('vacations'))
-    return render_template(url_for('vacations'), vacation_id = vacation_id)
+        return redirect(url_for('view_vacation', vacation_id=vacation_id))
+    return redirect(url_for('vacations'))
 
+@app.route('/delete_itinerary/<int:itinerary_id>', methods = ['POST'])
+def delete_itinerary(itinerary_id):
+    itinerary = Itinerary.query.get(itinerary_id)
+    vacation_id = itinerary.vacation_id
+    db.session.delete(itinerary)
+    db.session.commit()
+    return redirect(url_for('view_vacation', vacation_id = vacation_id))
 
 
 
@@ -137,33 +151,6 @@ def delete_vacations():
 
 #                                                                       LOGIN INFORMATION
 
-
-
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
-
-@app.route('/sign_up')
-def sign_up():
-    return render_template('sign_up.html')
-
-@app.route('/create_user', methods=["POST"])
-def create_user():
-    #query to find the usernames from it
-    username = request.form['username']
-    password = request.form['password']
-    return redirect(url_for('vacation'))
-
-@app.route('/login_user', methods=['POST'])
-def login_user():
-
-
-    return redirect(url_for('vacation'))
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
 
 
 
