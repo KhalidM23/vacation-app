@@ -1,6 +1,7 @@
 
+from xmlrpc.client import _datetime
 from flask import Flask, render_template, request, redirect, url_for
-from models import db, Vacation
+from models import Itinerary, db, Vacation
 from flask_login import LoginManager, UserMixin, login_user, logout_user, \
                         login_required, current_user
 from datetime import datetime
@@ -22,10 +23,7 @@ with app.app_context():
 def home():
     return render_template('home.html')
 
-
-
-
-
+#                                                                   VACATION INFORMATION
 
 @app.route('/vacations')
 def vacations():
@@ -54,18 +52,18 @@ def create_vacation():
 
         return redirect(url_for('vacations'))
     return render_template('create_vacation.html')
+   
+    
+@app.route('/edit_vacation/<int:vacation_id>', methods = ['POST','GET'])
+def reroute_edit_vacation(vacation_id):
+    vacation = Vacation.query.get(vacation_id)
+    print(vacation.destination)
+    return render_template('edit_vacation.html', vacation = vacation)
 
-@app.route('/add_itinerary/<int:vacation_id>', methods=['POST'])
-def add_itinerary(vacation_id):
-    vacation =  Vacation.query.get(vacation_id)
-    return render_template('edit_vacation.html ', vacation=vacation)
-
-
-@app.route('/edit_vacation/<int:vacation_id>', methods=['GET',"POST"])
+@app.route('/edit_vacationXXX/<int:vacation_id>', methods=['GET',"POST"])
 def edit_vacation(vacation_id):
-    editted_vacation = Vacation.query.get(vacation_id)
-    print(editted_vacation.destination)
     if(request.method == 'POST'):
+        editted_vacation = Vacation.query.get(vacation_id)
         editted_vacation.destination = request.form.get('destination')
 
         start_date_str = request.form.get('start_date')
@@ -81,12 +79,37 @@ def edit_vacation(vacation_id):
  
         db.session.commit()
         return render_template('home.html', vacation=editted_vacation)
+    return render_template('home.html', vacation=editted_vacation)
 
 
+@app.route('/view_vacation/<int:vacation_id>', methods= ['GET'])
+def view_vacation(vacation_id):
+    return render_template('view_vacation.html', vacation_id = vacation_id)
 
 
+#                                                                                           ITINERARY INFORMATION
 
+@app.route('/add_itinerary/<int:vacation_id>', methods = ['GET'])
+def reroute_add_itinerary(vacation_id):
+    print("rerouted!!!!")
+    return render_template('add_itinerary.html', vacation_id = vacation_id)
 
+@app.route('/add_itineraryX/<int:vacation_id>', methods=['POST'])
+def add_itinerary(vacation_id):
+    if(request.method == 'POST'):
+        new_activity = request.form.get('activity')
+
+        date_of_activity_str = request.form.get('date_of_activity')
+        date_of_activity = datetime.strptime(date_of_activity_str, '%Y-%m-%d').date()
+
+        cost_of_activity = request.form.get('cost_of_activity')
+        new_itinerary = Itinerary(activity = new_activity, date_of_activity = date_of_activity, 
+                                  cost_of_activity = cost_of_activity, vacation_id = vacation_id)
+        print("Itinerary added!")
+        db.session.add(new_itinerary)
+        db.session.commit()
+        return redirect(url_for('vacations'))
+    return render_template(url_for('vacations'), vacation_id = vacation_id)
 
 
 
@@ -112,7 +135,7 @@ def delete_vacations():
 
 
 
-
+#                                                                       LOGIN INFORMATION
 
 
 

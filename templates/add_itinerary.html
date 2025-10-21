@@ -1,0 +1,21 @@
+{%extends 'base.html'%}
+{%block title%}Add Itinerary{%endblock%}
+{%block content%}
+<form action="{{ url_for('add_itinerary', vacation_id = vacation_id)}}" method="POST" class="row g-3">
+    <!-- Activity -->
+    <div>
+        <label>Activity</label>
+        <input required type="text" name="activity"
+               placeholder="Museum tour, dinner, hike">
+    </div>
+    <div>
+        <label>Date of Activity</label>
+        <input required type="date" name="date_of_activity" />
+    </div>
+    <div>
+        <label>Cost of Activity</label>
+        <input required type="number" name="cost_of_activity" />
+    </div>
+    <button class="btn btn-primary" type="submit">Save</button>
+</form>
+{%endblock%}

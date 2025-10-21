@@ -1,32 +1,31 @@
 
-<DOCTYPE html>
-    <html>
-        <head>
-            <title>Vacations</title>
-        </head>
-        <body>
-            <h1>All Vacations</h1>
-            <p1>These are where all submitted vacations will be</p1>
-            {% if vacations %}
-            {% for vacation in vacations %}
-                <div>
-                    <h2>{{ vacation.destination }}</h2>
-                    <p1>From {{ vacation.start_date }} to {{ vacation.end_date }}</p1>
-                    <p1>{{ vacation.total_cost }}$ is the cost.</p1>
-                    <p1> {{ vacation.tips }} </p1>
-                    <form action="{{ url_for('add_itinerary', vacation_id=vacation.id) }}" method='post'>
-                        <button type="submit" class="btn">Edit</button>
-                    </form>
-                </div>
-            {% endfor %}
-            {% endif %}
+{% extends 'base.html'%}
 
-            <form action="/delete_all" method="get">
-                <button type="submit">Delete All Vacations</button>
-            </form>
-            <nav>
-                <a href= "/">Home</a>
-                <a href="/create_vacation">Create New Vacation</a>
-            </nav>
-        </body>
-    </html>
+{%block title%}Vacations{%endblock%}
+
+
+{%block content%}
+<h1>All Vacations</h1>
+<p>These are where all submitted vacations will be</p>
+{% if vacations %}
+{% for vacation in vacations %}
+<div class="border border-2">
+    <h2>{{ vacation.destination }}</h2>
+    <p>From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
+    <p>{{ vacation.total_cost }}$ is the cost.</p>
+    <p> {{ vacation.tips }} </p>
+    <form action="{{ url_for('reroute_edit_vacation', vacation_id=vacation.id) }}" method='get'>
+        <button type="submit" class="btn btn-primary">Edit</button>
+    </form>
+    <form action="{{url_for('view_vacation', vacation_id = vacation.id)}} ">
+        <button type="submit" class=" btn btn-primary">View</button>
+    </form>
+</div>
+{% endfor %}
+{% endif %}
+
+<form action="/delete_all" method="get">
+    <button type="submit">Delete All Vacations</button>
+</form>
+
+{% endblock %}

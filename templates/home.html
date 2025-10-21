@@ -1,15 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
+
+{% extends 'base.html' %}
+
+{% block title %}Home{%endblock%}
+
+
+{% block content %}
+<div>
+    <h1 class=" text-center">Welcome to the Vacation Sharing Platform!</h1>
+    <p class=" lead">Share your amazing vacation experiences with others.</p>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+<!--
+
+    <head>
     <title>Vacation Sharing Platform</title>
 </head>
 <body>
     <h1>Welcome to the Vacation Sharing Platform!</h1>
     <p1>Share your amazing vacation experiences with others.</p1>
     <nav>
-        <a href="/">Home</a>
-        <a href = "/vacations"> All Vacations </a>
-        <a href = "/login"> Login/Sign Up </a>
+        <a href="/home">Home</a>
+        <a href="/vacations"> All Vacations </a>
+        <a href="/login"> Login/Sign Up </a>
     </nav>
 </body>
-</html>
+
+-->
