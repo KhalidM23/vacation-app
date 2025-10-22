@@ -1,15 +1,15 @@
 
 {% extends 'base.html'%}
 
-{%block title%}Vacations{%endblock%}
+{%block title%}My Vacations{%endblock%}
 
 
 {%block content%}
-<h1>All Vacations</h1>
-<p>These are where all submitted vacations will be</p>
+<h1>My Vacations</h1>
+<p>These are all the vacations you created</p>
 {% if vacations %}
 {% for vacation in vacations %}
-<div class="border border-2">
+<div class="card d-inline-block" style="width: 18rem;">
     <h2>{{ vacation.destination }}</h2>
     <p>From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
     <p>{{ vacation.total_cost }}$ is the cost.</p>

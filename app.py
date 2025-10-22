@@ -3,7 +3,7 @@ from multiprocessing import synchronize
 from xmlrpc.client import _datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import Itinerary, db, Vacation, User
+from models import Itinerary, db, Vacation, User, Bookmarks
 from datetime import datetime
 app = Flask(__name__)
 
@@ -30,7 +30,12 @@ def home():
 @app.route('/vacations')
 def vacations():
     vacations = Vacation.query.all()
-    return render_template('vacations.html',vacations=vacations)
+    if(current_user.is_authenticated):
+        bookmarked = Bookmarks.query.filter_by(user_id = current_user.id).all()
+        bookmarked_vacations = [b.vacation_id for b in bookmarked]
+    else:
+        bookmarked_vacations = []
+    return render_template('all_vacations.html',vacations=vacations, bookmarks = bookmarked_vacations)
 
 @app.route('/create_vacation', methods=['POST','GET'])
 def create_vacation():
@@ -48,7 +53,7 @@ def create_vacation():
         tips = request.form.get('tips')
 
         new_vacay = Vacation(destination = dest,start_date = st_date, end_date = end_date,
-                             total_cost = cost, tips = tips)
+                             total_cost = cost, tips = tips, user_id = current_user.id)
         db.session.add(new_vacay)
         db.session.commit()
 
@@ -98,6 +103,12 @@ def delete_vacation(vacation_id):
     db.session.delete(vacation)
     db.session.commit()
     return redirect(url_for('vacations'))
+
+
+@app.route('/my_vacations')
+def my_vacations():
+    vacations = Vacation.query.filter_by(user_id=current_user.id).all()
+    return render_template('my_vacations.html', vacations = vacations)
 
 
 
@@ -194,6 +205,30 @@ def signup():
         
         return redirect(url_for('login'))
     return render_template('signup.html')
+
+
+
+
+
+
+
+
+
+#                                                                   BOOKMARK INFORMATION
+
+
+@app.route('/bookmark/<int:vacation_id>', methods = ['POST', 'GET'])
+def bookmark(vacation_id):
+    bookmarked = Bookmarks.query.filter_by(vacation_id=vacation_id, user_id = current_user.id).first()
+    if(not bookmarked):
+        bookmark = Bookmarks(vacation_id = vacation_id, user_id = current_user.id)
+        db.session.add(bookmark)
+        db.session.commit()
+    else:
+        db.session.delete(bookmarked)
+        db.session.commit()
+    return redirect(url_for('vacations'))
+
 
 
 if __name__ == '__main__':

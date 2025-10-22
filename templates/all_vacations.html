@@ -1,0 +1,42 @@
+
+{% extends 'base.html'%}
+
+{%block title%}Vacations{%endblock%}
+
+
+{%block content%}
+<h1>All Vacations</h1>
+<p>These are where all submitted vacations will be</p>
+{% if vacations %}
+{% for vacation in vacations %}
+<div class="card d-inline-block" style="width: 18rem;">
+    <h2>{{ vacation.destination }}</h2>
+    <p>From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
+    <p>{{ vacation.total_cost }}$ is the cost.</p>
+    <p> {{ vacation.tips }} </p>
+    <form action="{{url_for('view_vacation', vacation_id = vacation.id)}} ">
+        <button type="submit" class=" btn btn-primary">View</button>
+    </form>
+    {% if current_user.is_authenticated %}
+    
+    <form action="{{url_for('bookmark', vacation_id = vacation.id)}}">
+        {% if vacation.id in bookmarks %}
+        <button type="submit" class="btn btn-dark">
+            Bookmark
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-light">
+            Bookmark
+        </button>
+        {% endif %}
+
+    </form>
+    
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+
+
+{% endblock %}

@@ -23,9 +23,11 @@
     {% endfor %}
     {% endif %}
 </div>
+{% if current_user.id == vacation.user_id %}
 <div>
     <a class="btn btn-primary" href="{{ url_for('reroute_add_itinerary', vacation_id=vacation.id) }}" method="GET">Add Itinerary</a>
 </div>
+{% endif %}
 
 
 {%endblock%}
