@@ -38,6 +38,7 @@ def vacations():
     return render_template('all_vacations.html',vacations=vacations, bookmarks = bookmarked_vacations)
 
 @app.route('/create_vacation', methods=['POST','GET'])
+@login_required
 def create_vacation():
     if(request.method == 'POST'):
         dest = request.form.get('destination')
@@ -60,13 +61,16 @@ def create_vacation():
         return redirect(url_for('vacations'))
     return render_template('create_vacation.html')
    
-    
+@login_required
 @app.route('/edit_vacation/<int:vacation_id>', methods = ['POST','GET'])
 def reroute_edit_vacation(vacation_id):
     vacation = Vacation.query.get(vacation_id)
     print(vacation.destination)
+    if(vacation.user_id != current_user.id):
+        return redirect(request.referrer)
     return render_template('edit_vacation.html', vacation = vacation)
 
+@login_required
 @app.route('/edit_vacationXXX/<int:vacation_id>', methods=['GET',"POST"])
 def edit_vacation(vacation_id):
     if(request.method == 'POST'):
@@ -85,7 +89,7 @@ def edit_vacation(vacation_id):
         editted_vacation.tips = request.form.get('tips')
  
         db.session.commit()
-        return render_template('home.html', vacation=editted_vacation)
+        return render_template('view_vacation.html', vacation=editted_vacation)
     return render_template('home.html', vacation=editted_vacation)
 
 
@@ -97,15 +101,20 @@ def view_vacation(vacation_id):
 
 
 @app.route('/delete_vacation/<int:vacation_id>', methods=['POST'])
+@login_required
 def delete_vacation(vacation_id):
     vacation = Vacation.query.get(vacation_id)
+    if(vacation.user_id != current_user.id):
+            return redirect(url_for('vacations'))
     db.session.query(Itinerary).filter_by(vacation_id=vacation_id).delete(synchronize_session = False)
     db.session.delete(vacation)
     db.session.commit()
-    return redirect(url_for('vacations'))
+    return redirect(request.referrer or url_for('vacations'))
+
 
 
 @app.route('/my_vacations')
+@login_required
 def my_vacations():
     vacations = Vacation.query.filter_by(user_id=current_user.id).all()
     return render_template('my_vacations.html', vacations = vacations)
@@ -113,12 +122,13 @@ def my_vacations():
 
 
 #                                                                                           ITINERARY INFORMATION
-
+@login_required
 @app.route('/add_itinerary/<int:vacation_id>', methods = ['GET'])
 def reroute_add_itinerary(vacation_id):
     print("rerouted!!!!")
     return render_template('add_itinerary.html', vacation_id = vacation_id)
 
+@login_required
 @app.route('/add_itinerary_submit/<int:vacation_id>', methods=['POST'])
 def add_itinerary(vacation_id):
     if(request.method == 'POST'):
@@ -136,6 +146,7 @@ def add_itinerary(vacation_id):
         return redirect(url_for('view_vacation', vacation_id=vacation_id))
     return redirect(url_for('vacations'))
 
+@login_required
 @app.route('/delete_itinerary/<int:itinerary_id>', methods = ['POST'])
 def delete_itinerary(itinerary_id):
     itinerary = Itinerary.query.get(itinerary_id)
@@ -179,6 +190,7 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
+@login_required
 @app.route('/logout')
 def logout():
     logout_user()
@@ -210,13 +222,9 @@ def signup():
 
 
 
-
-
-
-
 #                                                                   BOOKMARK INFORMATION
 
-
+@login_required
 @app.route('/bookmark/<int:vacation_id>', methods = ['POST', 'GET'])
 def bookmark(vacation_id):
     bookmarked = Bookmarks.query.filter_by(vacation_id=vacation_id, user_id = current_user.id).first()
@@ -227,7 +235,17 @@ def bookmark(vacation_id):
     else:
         db.session.delete(bookmarked)
         db.session.commit()
-    return redirect(url_for('vacations'))
+    return redirect(request.referrer or url_for('vacations'))
+
+@login_required
+@app.route('/my_bookmarks')
+def my_bookmarks():
+    my_bookmarks = Bookmarks.query.filter_by(user_id = current_user.id).all()
+    vacations = []
+    for bookmark in my_bookmarks:
+        vacation = Vacation.query.get(bookmark.vacation_id)
+        vacations.append(vacation)
+    return render_template('my_bookmarks.html', vacations = vacations)
 
 
 

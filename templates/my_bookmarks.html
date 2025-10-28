@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
-{% block title %}Browse Vacations{% endblock %}
+{% block title %}My Bookmarks{% endblock %}
 {% block content %}
 
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>All Vacations</h1>
-        <a href="{{ url_for('create_vacation') }}" class="btn btn-success">
-            + Create New Vacation
-        </a>
+    <div class="mb-4">
+        <h1>My Bookmarks</h1>
+        <p class="text-muted">Vacations you've saved for later</p>
     </div>
 
     {% if vacations %}
@@ -29,24 +27,17 @@
                         {{ vacation.tips[:100] if vacation.tips else 'No tips provided' }}...
                     </p>
 
-                    <div class="d-flex gap-2 mt-auto">
+                    <div class="d-grid gap-2 mt-auto">
                         <a href="{{ url_for('view_vacation', vacation_id=vacation.id) }}"
-                           class="btn btn-primary flex-grow-1">
+                           class="btn btn-primary">
                             View Details
                         </a>
-
-                        {% if current_user.is_authenticated %}
                         <form action="{{ url_for('bookmark', vacation_id=vacation.id) }}"
-                              method="POST" class="d-inline">
-                            {% if vacation.id in bookmarks %}
-                            <button type="submit" class="btn btn-warning" title="Remove bookmark">
+                              method="POST">
+                            <button type="submit" class="btn btn-warning w-100">
+                                Remove Bookmark
                             </button>
-                            {% else %}
-                            <button type="submit" class="btn btn-outline-secondary" title="Bookmark">
-                            </button>
-                            {% endif %}
                         </form>
-                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -55,9 +46,9 @@
     </div>
     {% else %}
     <div class="text-center py-5">
-        <p class="text-muted">No vacations yet. Be the first to share one!</p>
-        <a href="{{ url_for('create_vacation') }}" class="btn btn-primary">
-            Create First Vacation
+        <p class="text-muted">You haven't bookmarked any vacations yet.</p>
+        <a href="{{ url_for('vacations') }}" class="btn btn-primary">
+            Browse Vacations
         </a>
     </div>
     {% endif %}

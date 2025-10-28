@@ -1,21 +1,53 @@
-{%extends 'base.html'%}
-{%block title%}Add Itinerary{%endblock%}
-{%block content%}
-<form action="{{ url_for('add_itinerary', vacation_id = vacation_id)}}" method="POST" class="row g-3">
-    <!-- Activity -->
-    <div>
-        <label>Activity</label>
-        <input required type="text" name="activity"
-               placeholder="Museum tour, dinner, hike">
+{% extends 'base.html' %}
+{% block title %}Add Activity{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">Add Activity to Itinerary</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('add_itinerary', vacation_id=vacation_id) }}">
+
+                    <!-- Activity -->
+                    <div class="mb-3">
+                        <label for="activity" class="form-label">Activity</label>
+                        <input type="text" class="form-control" id="activity"
+                               name="activity"
+                               placeholder="Museum tour, dinner, hike..." required>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="mb-3">
+                        <label for="date_of_activity" class="form-label">Date of Activity</label>
+                        <input type="date" class="form-control" id="date_of_activity"
+                               name="date_of_activity" required>
+                    </div>
+
+                    <!-- Cost with $ symbol -->
+                    <div class="mb-3">
+                        <label for="cost_of_activity" class="form-label">Cost of Activity</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="cost_of_activity"
+                                   name="cost_of_activity" placeholder="0.00"
+                                   step="0.01" required>
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Add Activity</button>
+                        <a href="{{ url_for('view_vacation', vacation_id=vacation_id) }}"
+                           class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
     </div>
-    <div>
-        <label>Date of Activity</label>
-        <input required type="date" name="date_of_activity" />
-    </div>
-    <div>
-        <label>Cost of Activity</label>
-        <input required type="number" name="cost_of_activity" />
-    </div>
-    <button class="btn btn-primary" type="submit">Save</button>
-</form>
-{%endblock%}
+</div>
+
+{% endblock %}

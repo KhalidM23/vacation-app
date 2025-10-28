@@ -1,12 +1,72 @@
-
 {% extends 'base.html' %}
-
-{% block title %}Home{%endblock%}
-
-
+{% block title %}Home{% endblock %}
 {% block content %}
-<div>
-    <h1 class=" text-center">Welcome to the Vacation Sharing Platform!</h1>
-    <p class=" lead">Share your amazing vacation experiences with others.</p>
+
+<div class="container">
+    <!-- Hero Section -->
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold mb-3">Welcome to Vacation Share</h1>
+        <p class="lead text-muted mb-4">
+            Discover amazing vacation experiences from travelers around the world.
+            Share your own adventures and inspire others to explore.
+        </p>
+
+        {% if current_user.is_authenticated %}
+        <!-- Logged in users -->
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{{ url_for('vacations') }}" class="btn btn-primary btn-lg">
+                Browse Vacations
+            </a>
+            <a href="{{ url_for('create_vacation') }}" class="btn btn-success btn-lg">
+                Share Your Vacation
+            </a>
+        </div>
+        {% else %}
+        <!-- Not logged in -->
+        <div class="d-flex gap-3 justify-content-center">
+            <a href="{{ url_for('signup') }}" class="btn btn-success btn-lg">
+                Get Started
+            </a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+                Login
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5 g-4">
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Discover</h3>
+                    <p class="card-text">
+                        Browse vacations from travelers worldwide. Find inspiration for your next adventure.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Share</h3>
+                    <p class="card-text">
+                        Share your vacation experiences with detailed itineraries, costs, and tips.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title">Save</h3>
+                    <p class="card-text">
+                        Bookmark your favorite vacations and build your dream travel list.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

@@ -1,31 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Edit Vacation{% endblock %}
+{% block content %}
 
-{%extends 'base.html'%}
-{%block title%}Edit Vacation{%endblock%}
-{%block content%}
-<form action="{{url_for('edit_vacation', vacation_id = vacation.id)}}" method='post'>
-    <div>
-        Destination is {{vacation.destination}}
-        <input type="text" , name="destination" , value="{{vacation.destination}}" />
-    </div>
-    <div>
-        Start Date is {{vacation.start_date}}
-        <input type="date" name="start_date" value="{{ vacation.start_date.strftime('%Y-%m-%d') if vacation.start_date else '' }}" />
-    </div>
-    <div>
-        End Date is {{vacation.end_date}}
-        <input type="date" name="end_date" value="{{ vacation.end_date.strftime('%Y-%m-%d') if vacation.end_date else '' }}" />
-    </div>
-    <div>
-        Total Cost of Trip is {{vacation.cost}}
-        <input type="number" , name="total_cost" , value="{{vacation.cost}}" />
-    </div>
-    <div>
-        Reccomendations/Tips are {{vacation.tips}}
-        <textarea name="tips" , value="{{vacation.tips}}"></textarea>
-    </div>
-    <div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Edit Vacation</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_vacation', vacation_id=vacation.id) }}">
 
+                    <div class="mb-3">
+                        <label for="destination" class="form-label">Destination</label>
+                        <input type="text" class="form-control" id="destination"
+                               name="destination" value="{{ vacation.destination }}"
+                               placeholder="Paris, Tokyo, Hawaii..." required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="start_date"
+                                   name="start_date"
+                                   value="{{ vacation.start_date.strftime('%Y-%m-%d') if vacation.start_date else '' }}"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="end_date"
+                                   name="end_date"
+                                   value="{{ vacation.end_date.strftime('%Y-%m-%d') if vacation.end_date else '' }}"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="total_cost" class="form-label">Total Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="total_cost"
+                                   name="total_cost" value="{{ vacation.total_cost }}"
+                                   step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tips" class="form-label">Recommendations/Tips</label>
+                        <textarea class="form-control" id="tips" name="tips" rows="4"
+                                  placeholder="Share your tips and recommendations...">{{ vacation.tips }}</textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{{ url_for('view_vacation', vacation_id=vacation.id) }}"
+                           class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
     </div>
-    <button class ="btn btn-primary"type="submit">Save Vacation</button>
-</form>
-{%endblock%}
+</div>
+
+{% endblock %}

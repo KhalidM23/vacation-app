@@ -1,30 +1,59 @@
-{%extends 'base.html'%}
-{%block title%}Create Vacation{%endblock%}
-{%block content%}
-<form method="POST" , action="/create_vacation">
-    <label>
-        Destination
-        <input type="text" , name="destination" />
-    </label>
-    <label>
-        Start Date
-        <input type="date" , name="start_date" />
-    </label>
-    <label>
-        End Date
-        <input type="date" , name="end_date" />
-    </label>
-    <label>
-        Total Cost of Trip
-        <input type="number" , name="total_cost" />
-    </label>
-    <label>
-        Reccomendations/Tips
-        <textarea name="tips"></textarea>
-    </label>
-    <button class="btn btn-primary" type="submit">Create Vacation</button>
-</form>
-<p1>
-    <button onclick="window.location.href='/vacations'">Back</button>
-</p1>
-{%endblock%}
+{% extends 'base.html' %}
+{% block title %}Create Vacation{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Create New Vacation</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/create_vacation">
+
+                    <div class="mb-3">
+                        <label for="destination" class="form-label">Destination</label>
+                        <input type="text" class="form-control" id="destination"
+                               name="destination" placeholder="Paris, Tokyo, Hawaii..." required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="start_date" class="form-label">Start Date</label>
+                            <input type="date" class="form-control" id="start_date"
+                                   name="start_date" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="end_date" class="form-label">End Date</label>
+                            <input type="date" class="form-control" id="end_date"
+                                   name="end_date" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="total_cost" class="form-label">Total Cost</label>
+                        <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" class="form-control" id="total_cost"
+                                   name="total_cost" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tips" class="form-label">Recommendations/Tips</label>
+                        <textarea class="form-control" id="tips" name="tips" rows="4"
+                                  placeholder="Share your tips and recommendations..."></textarea>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">Create Vacation</button>
+                        <a href="/vacations" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

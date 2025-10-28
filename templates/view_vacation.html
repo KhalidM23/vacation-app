@@ -1,33 +1,93 @@
-{%extends 'base.html'%}
-{%block title%}View Vacations{%endblock%}
-{%block content%}
+﻿{% extends 'base.html' %}
+{% block title %}{{ vacation.destination }} - Vacation Details{% endblock %}
+{% block content %}
 
-<h1>Vacation</h1>
-<div class="border border-2">
-    <h2>{{ vacation.destination }}</h2>
-    <p>From {{ vacation.start_date }} to {{ vacation.end_date }}</p>
-    <p>{{ vacation.total_cost }}$ is the cost.</p>
-    <p> {{ vacation.tips }} </p>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ url_for('vacations') }}" class="btn btn-outline-secondary">
+            Back to All Vacations
+        </a>
+        {% if current_user.id == vacation.user_id %}
+        <a href="{{ url_for('reroute_edit_vacation', vacation_id=vacation.id) }}"
+           class="btn btn-outline-primary">
+            Edit
+        </a>
+        {% endif %}
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">{{ vacation.destination }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2">
+                        <strong>Dates:</strong>
+                        {{ vacation.start_date }} to {{ vacation.end_date }}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2">
+                        <strong>Total Cost:</strong>
+                        ${{ vacation.total_cost }}
+                    </p>
+                </div>
+            </div>
+
+            {% if vacation.tips %}
+            <hr>
+            <h5>Tips & Recommendations</h5>
+            <p class="text-muted">{{ vacation.tips }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Itinerary</h3>
+            {% if current_user.id == vacation.user_id %}
+            <a href="{{ url_for('reroute_add_itinerary', vacation_id=vacation.id) }}"
+               class="btn btn-sm btn-success">
+                + Add Activity
+            </a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% if itineraries %}
+            {% for itin in itineraries %}
+            <div class="border rounded p-3 mb-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h5 class="mb-1">{{ itin.activity }}</h5>
+                        <p class="text-muted mb-1">
+                            <small>{{ itin.date_of_activity }}</small>
+                        </p>
+                        <p class="mb-0">
+                            <strong>Cost:</strong> ${{ itin.cost_of_activity }}
+                        </p>
+                    </div>
+                    {% if current_user.id == vacation.user_id %}
+                    <form action="{{ url_for('delete_itinerary', itinerary_id=itin.id) }}"
+                          method="POST">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            Delete
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-muted text-center py-4">
+                No activities added yet.
+                {% if current_user.id == vacation.user_id %}
+                Click "Add Activity" to get started!
+                {% endif %}
+            </p>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
-<h2>Itineraries</h2>
-<div class="border border-2">
-    {% if itineraries %}
-    {% for itin in itineraries %}
-    <h2>{{ itin.activity }}</h2>
-    <p>From {{ itin.date_of_activity }}</p>
-    <p>{{itin.cost_of_activity }}$ is the cost.</p>
-    <form action="{{url_for('delete_itinerary', itinerary_id = itin.id)}}" method="post">
-        <button class="btn btn-danger">Delete</button>
-    </form>
-    {% endfor %}
-    {% endif %}
-</div>
-{% if current_user.id == vacation.user_id %}
-<div>
-    <a class="btn btn-primary" href="{{ url_for('reroute_add_itinerary', vacation_id=vacation.id) }}" method="GET">Add Itinerary</a>
-</div>
-{% endif %}
-
-
-{%endblock%}
+{% endblock %}
