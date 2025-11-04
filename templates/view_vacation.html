@@ -9,10 +9,17 @@
         </a>
         {% if current_user.id == vacation.user_id %}
         <a href="{{ url_for('reroute_edit_vacation', vacation_id=vacation.id) }}"
-           class="btn btn-outline-primary">
+           class="btn btn-primary">
             Edit
         </a>
         {% endif %}
+        {% if current_user.id != vacation.user_id %}
+        <a href="{{ url_for('copy_vacation', vacation_id=vacation.id) }}"
+           class="btn btn-primary">
+            Copy
+        </a>
+        {% endif %}
+
     </div>
 
     <div class="card shadow-sm mb-4">

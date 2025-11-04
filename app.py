@@ -1,7 +1,7 @@
 
 from multiprocessing import synchronize
 from xmlrpc.client import _datetime
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import Itinerary, db, Vacation, User, Bookmarks
 from datetime import datetime
@@ -187,7 +187,8 @@ def login():
             login_user(existing_user)
             return redirect(url_for('home'))
         else:
-            return redirect(url_for('login'))
+            flash({"msg":"Wrong username or password. Please try again."}, "danger")
+            return redirect(url_for('login'),303)
     return render_template('login.html')
 
 @login_required
@@ -207,7 +208,8 @@ def signup():
 
         existing_user = User.query.filter_by(username=username).first()
         if(existing_user):
-            return redirect(url_for('signup'))
+            flash({"msg":"That username is taken."}, "danger")
+            return redirect(url_for('signup'),303)
 
         new_user = User(username=username)
         new_user.set_password(password)
@@ -236,7 +238,7 @@ def bookmark(vacation_id):
         db.session.delete(bookmarked)
         db.session.commit()
     return redirect(request.referrer or url_for('vacations'))
-
+                                                                        
 @login_required
 @app.route('/my_bookmarks')
 def my_bookmarks():
@@ -246,6 +248,19 @@ def my_bookmarks():
         vacation = Vacation.query.get(bookmark.vacation_id)
         vacations.append(vacation)
     return render_template('my_bookmarks.html', vacations = vacations)
+
+
+#                                                                                               COPY VACATION INFORMATION
+@login_required
+@app.route('/copy/<int:vacation_id>', methods = ['POST','GET'])
+def copy_vacation(vacation_id):
+    copied_vacation = Vacation.query.filter_by(id=vacation_id).first()
+    new_vacation = Vacation(destination = copied_vacation.destination,start_date = copied_vacation.start_date,
+                                end_date = copied_vacation.end_date, total_cost = copied_vacation.total_cost, 
+                                    tips = copied_vacation.tips, user_id = current_user.id)
+    db.session.add(new_vacation)
+    db.session.commit()
+    return render_template('view_vacation.html', vacation = new_vacation)
 
 
 

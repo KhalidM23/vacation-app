@@ -69,7 +69,6 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Vacation Share</a>
 
-            <!-- Navbar links -->
             <div class="navbar-nav me-auto">
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/vacations">Browse Vacations</a>
@@ -80,7 +79,6 @@
                 {% endif %}
             </div>
 
-            <!-- User section on the right -->
             {% if current_user.is_authenticated %}
             <div class="d-flex align-items-center">
                 <span class="navbar-text text-white me-3">
@@ -97,6 +95,15 @@
     </nav>
 
     <div class="container mt-4">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="alert alert-{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         {% block content %}
         {% endblock %}
     </div>

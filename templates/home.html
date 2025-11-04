@@ -3,7 +3,6 @@
 {% block content %}
 
 <div class="container">
-    <!-- Hero Section -->
     <div class="text-center py-5">
         <h1 class="display-4 fw-bold mb-3">Welcome to Vacation Share</h1>
         <p class="lead text-muted mb-4">
@@ -12,7 +11,6 @@
         </p>
 
         {% if current_user.is_authenticated %}
-        <!-- Logged in users -->
         <div class="d-flex gap-3 justify-content-center">
             <a href="{{ url_for('vacations') }}" class="btn btn-primary btn-lg">
                 Browse Vacations
@@ -22,19 +20,17 @@
             </a>
         </div>
         {% else %}
-        <!-- Not logged in -->
         <div class="d-flex gap-3 justify-content-center">
             <a href="{{ url_for('signup') }}" class="btn btn-success btn-lg">
                 Get Started
             </a>
-            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+            <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">
                 Login
             </a>
         </div>
         {% endif %}
     </div>
 
-    <!-- Features Section -->
     <div class="row mt-5 g-4">
         <div class="col-md-4">
             <div class="card text-center h-100 shadow-sm">
