@@ -40,6 +40,10 @@
                         Browse vacations from travelers worldwide. Find inspiration for your next adventure.
                     </p>
                 </div>
+                <img src="{{ url_for('static', filename='img/discover.jpg') }}"
+                     class="card-img-bottom"
+                     alt="Discover destinations"
+                     style="height: 200px; object-fit: cover;">
             </div>
         </div>
         <div class="col-md-4">
@@ -50,6 +54,11 @@
                         Share your vacation experiences with detailed itineraries, costs, and tips.
                     </p>
                 </div>
+                <img src="{{ url_for('static', filename='img/share.jpg') }}"
+                     class="card-img-bottom"
+                     alt="Share your trip"
+                     style="height: 200px; object-fit: cover;">
+
             </div>
         </div>
         <div class="col-md-4">
@@ -60,9 +69,14 @@
                         Bookmark your favorite vacations and build your dream travel list.
                     </p>
                 </div>
+                <img src="{{ url_for('static', filename='img/save.jpg') }}"
+                     class="card-img-bottom"
+                     alt="Save favorites"
+                     style="height: 200px; object-fit: cover;">
             </div>
         </div>
     </div>
+</div>
 </div>
 
 {% endblock %}
