@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
 
@@ -31,48 +31,78 @@
         {% endif %}
     </div>
 
+    <style>
+        .feature-card {
+            border: 0;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+            .feature-card .card-body {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+
+            .feature-card .card-title {
+                font-weight: 800;
+                letter-spacing: .3px;
+            }
+
+        .feature-img {
+            height: 190px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 1rem 2rem rgba(0,0,0,.25);
+            transition: .2s ease;
+        }
+    </style>
+
     <div class="row mt-5 g-4">
         <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm">
+            <div class="card text-center h-100 shadow-sm feature-card">
                 <div class="card-body">
                     <h3 class="card-title">Discover</h3>
-                    <p class="card-text">
+                    <p class="card-text mb-2">
                         Browse vacations from travelers worldwide. Find inspiration for your next adventure.
                     </p>
+                    <a href="{{ url_for('vacations') }}" class="link-light text-decoration-none small">Discover destinations →</a>
                 </div>
-                <img src="{{ url_for('static', filename='/discover.JPG') }}"
-                     class="card-img-bottom"
-                     alt="Discover destinations"
-                     style="height: 200px; object-fit: cover;">
+                <img src="{{ url_for('static', filename='discover.JPG') }}"
+                     class="feature-img"
+                     alt="Discover destinations">
             </div>
         </div>
+
         <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm">
+            <div class="card text-center h-100 shadow-sm feature-card">
                 <div class="card-body">
                     <h3 class="card-title">Share</h3>
-                    <p class="card-text">
+                    <p class="card-text mb-2">
                         Share your vacation experiences with detailed itineraries, costs, and tips.
                     </p>
+                    <a href="{{ url_for('create_vacation') }}" class="link-light text-decoration-none small">Share your trip →</a>
                 </div>
-                <img src="{{ url_for('static', filename='/share.JPG') }}"
-                     class="card-img-bottom"
-                     alt="Share your trip"
-                     style="height: 200px; object-fit: cover;">
-
+                <img src="{{ url_for('static', filename='share.JPG') }}"
+                     class="feature-img"
+                     alt="Share your trip">
             </div>
         </div>
+
         <div class="col-md-4">
-            <div class="card text-center h-100 shadow-sm">
+            <div class="card text-center h-100 shadow-sm feature-card">
                 <div class="card-body">
                     <h3 class="card-title">Save</h3>
-                    <p class="card-text">
+                    <p class="card-text mb-2">
                         Bookmark your favorite vacations and build your dream travel list.
                     </p>
+                    <a href="{{ url_for('my_bookmarks') }}" class="link-light text-decoration-none small">Save favorites →</a>
                 </div>
-                <img src="{{ url_for('static', filename='/save.JPG') }}"
-                     class="card-img-bottom"
-                     alt="Save favorites"
-                     style="height: 200px; object-fit: cover;">
+                <img src="{{ url_for('static', filename='save.JPG') }}"
+                     class="feature-img"
+                     alt="Save favorites">
             </div>
         </div>
     </div>

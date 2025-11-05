@@ -6,6 +6,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from models import Itinerary, db, Vacation, User, Bookmarks
 from datetime import datetime
 from dotenv import load_dotenv
+import os
 app = Flask(__name__)
 
 
