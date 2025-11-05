@@ -1,6 +1,7 @@
 ﻿# Vacation Share Platform
 
 A web application for travelers to share and discover vacation experiences. Users can create detailed vacation posts with itineraries, bookmark favorite trips, and get inspired for their next adventure.
+https://khalidmo.pythonanywhere.com/
 
 ## Features
 
@@ -47,37 +48,6 @@ A web application for travelers to share and discover vacation experiences. User
 - Werkzeug password hashing
 - Session-based authentication
 - Protected routes with `@login_required`
-
-## Installation
-
-1. **Clone the repository**
-```bash
-git clone https://github.com/KhalidM23/vacation-app.git
-cd vacation-app
-```
-
-2. **Create virtual environment**
-```bash
-python -m venv venv
-source venv/Scripts/activate  # On Windows Git Bash
-# OR
-venv\Scripts\activate  # On Windows CMD
-```
-
-3. **Install dependencies**
-```bash
-pip install flask flask-sqlalchemy flask-login
-```
-
-4. **Run the application**
-```bash
-python app.py
-```
-
-5. **Open your browser**
-```
-http://localhost:5000
-```
 
 ## Project Structure
 ```
